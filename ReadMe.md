@@ -15,10 +15,12 @@ For more help see the Apache Camel documentation
 
 
 For testing
+
     curl http://localhost:8090/camel/api-docs
     curl http://localhost:8090/camel/ping
 
 Acces Swagger UI with definition
+
     http://localhost:8090/webjars/swagger-ui/2.1.0/index.html?url=/camel/api-docs
 
     curl http://localhost:8090/camel/restsvc/ping
