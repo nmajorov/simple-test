@@ -1,0 +1,97 @@
+{
+  "defaultEnv": "default",
+  "environments": {
+    "default": {
+      "machines": {
+        "dev-machine": {
+          "attributes": {
+            "memoryLimitBytes": "2147483648"
+          },
+          "servers": {
+            "springboot": {
+              "port": "8080",
+              "attributes": {},
+              "protocol": "http"
+            }
+          },
+          "volumes": {
+            "m2": {
+              "path": "/home/jboss/.m2"
+            },
+            "javadata": {
+              "path": "/home/jboss/jdtls/data"
+            }
+          },
+          "installers": [
+            "org.eclipse.che.exec",
+            "org.eclipse.che.terminal",
+            "org.eclipse.che.ws-agent",
+            "org.eclipse.che.ls.camel",
+            "org.eclipse.che.ls.java",
+            "com.redhat.bayesian.lsp"
+          ],
+          "env": {}
+        }
+      },
+      "recipe": {
+        "type": "dockerimage",
+        "content": "registry.access.redhat.com/codeready-workspaces/stacks-java"
+      }
+    }
+  },
+  "projects": [
+    {
+      "links": [],
+      "name": "simple-test",
+      "attributes": {
+        "contribute_to_branch": [
+          "master"
+        ]
+      },
+      "type": "blank",
+      "source": {
+        "location": "https://github.com/nmajorov/simple-test.git",
+        "type": "git",
+        "parameters": {}
+      },
+      "path": "/simple-test",
+      "description": "",
+      "problems": [],
+      "mixins": [
+        "pullrequest"
+      ]
+    }
+  ],
+  "name": "hpoc",
+  "attributes": {},
+  "commands": [
+    {
+      "commandLine": "MAVEN_OPTS='-Xmx100m' && mvn clean package -f ${current.project.path}/pom.xml",
+      "name": "build",
+      "attributes": {
+        "goal": "Build",
+        "previewUrl": ""
+      },
+      "type": "mvn"
+    },
+    {
+      "commandLine": "MAVEN_OPTS='-Xmx100m' && mvn spring-boot:run -f ${current.project.path}/pom.xml",
+      "name": "run",
+      "attributes": {
+        "goal": "Run",
+        "previewUrl": "${server.8080/tcp}"
+      },
+      "type": "mvn"
+    },
+    {
+      "commandLine": "${HOME}/stack-analysis.sh -f ${current.project.path}/pom.xml -p ${current.project.path}",
+      "name": "dependency_analysis",
+      "attributes": {
+        "goal": "Run",
+        "previewUrl": ""
+      },
+      "type": "custom"
+    }
+  ],
+  "links": []
+}
