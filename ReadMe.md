@@ -25,6 +25,49 @@ Acces Swagger UI with definition
 
     curl http://localhost:8090/camel/restsvc/ping
 
+
 To deploy on Openshift, make sure you are connected to your Openshift instance and project with the oc command.
 
     mvn -P ocp fabric8:deploy
+
+
+
+
+## Changes requried if import images from registry.redhat.io
+
+
+Create secret:
+
+		oc create secret generic redhatio-token  --from-file=.dockerconfigjson=$HOME/.docker/config.json --type=kubernetes.io/dockerconfigjson
+
+
+		oc secrets link builder  redhatio-token
+		
+		oc secrets link default redhatio-token --for=pull
+
+
+
+import images from redhat.io
+
+
+		oc import-image fuse-test/fuse-java-openshift --from=registry.redhat.io/fuse7/fuse-java-openshift --confirm --loglevel=7
+
+
+tag if needed:
+	
+
+		oc tag  fuse-test/fuse-java-openshift:latest  fuse-test/fuse-java-openshift:1.3
+
+
+	
+
+deploy with command:
+
+
+		mvn -P ocp fabric8:deploy -Dfabric8.generator.from=fuse-test/fuse-java-openshift:1.3
+
+
+
+
+
+
